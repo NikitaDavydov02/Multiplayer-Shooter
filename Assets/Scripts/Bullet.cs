@@ -19,11 +19,16 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (MainManager.GameStatus == GameStatus.Finished)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
         rb.velocity = velocity * transform.right;
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject != owner)
+        if (other.gameObject != owner && other.gameObject.tag!="Coin")
         {
             Player player = other.gameObject.GetComponent<Player>();
             if (player != null)

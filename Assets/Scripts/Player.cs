@@ -8,11 +8,10 @@ public class Player : MonoBehaviour
     private float velocity;
     [SerializeField]
     private float angularVelocity;
-    private Vector2 movmentDir;
     private Rigidbody2D rb;
     private PlayerInputActions inputActions;
     private Vector2 targetRotationDirection;
-    private float forwardMovmentInput;
+    private Vector2 movmentDir;
     public bool Alive { get; private set; } = true;
     public int HP { get; private set; }
     [SerializeField]
@@ -22,11 +21,13 @@ public class Player : MonoBehaviour
     private Vector3 currentRotation;
     [SerializeField]
     private float rotationJoystickTreshhold = 1f;
+    public int CoinsCollected { get; private set; }
     // Start is called before the first frame update
     private void Awake()
     {
         inputActions = new PlayerInputActions();
         inputActions.Enable();
+        CoinsCollected = 0;
     }
     private void OnDisable()
     {
@@ -40,11 +41,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (MainManager.GameIsFinished)
+        if (MainManager.GameStatus!=GameStatus.Playing)
             return;
         currentRotation= new Vector3(transform.TransformDirection(Vector3.right).x, transform.TransformDirection(Vector3.right).y, 0);
         currentRotation.Normalize();
-        Vector2 forwardInput = inputActions.MainActionMap.Move.ReadValue<Vector2>();
+        movmentDir = inputActions.MainActionMap.Move.ReadValue<Vector2>();
+
         //Debug.Log("Forward input: " + forwardInput);
         Vector2 rotationInput = inputActions.MainActionMap.Rotate.ReadValue<Vector2>();
         targetRotationDirection = rotationInput;
@@ -53,14 +55,11 @@ public class Player : MonoBehaviour
         {
             targetRotationDirection = currentRotation;
         }
-        forwardMovmentInput = forwardInput.y;
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Shot();
         }
 
-        movmentDir = transform.right;
-        movmentDir.Normalize();
     }
     private void FixedUpdate()
     {
@@ -88,7 +87,7 @@ public class Player : MonoBehaviour
         //if (transform.TransformDirection(Vector3.right).x < 0)
         //    currentAngle += 180;
         //Debug.Log("Movment velocity:" + movmentDir * forwardMovmentInput * velocity);
-        rb.velocity = movmentDir* forwardMovmentInput * velocity;
+        rb.velocity = movmentDir* velocity;
     }
     public void Damage(int damage)
     {
@@ -105,8 +104,8 @@ public class Player : MonoBehaviour
         bullet.transform.rotation = this.transform.rotation;
         bullet.GetComponent<Bullet>().owner = this.gameObject;
     }
-    //private void OnCollisionEnter(Collision collision)
-    //{
-     //   Debug.Log("Collision");
-    //}
+    public void CoinIsCollected()
+    {
+        CoinsCollected++;
+    }
 }

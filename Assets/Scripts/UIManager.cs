@@ -14,7 +14,14 @@ public class UIManager : MonoBehaviour
     GameObject FinalPopup;
     [SerializeField]
     Text winnerNameLable;
+    [SerializeField]
+    Text winnerCollectedCoinsLabel;
     private Dictionary<Slider, Player> playerSliders = new Dictionary<Slider, Player>();
+    [SerializeField]
+    private Slider coinSlider;
+    [SerializeField]
+    private Text collectedCoinsCountText;
+    
     // Start is called before the first frame update
     private void Awake()
     {
@@ -42,11 +49,9 @@ public class UIManager : MonoBehaviour
     }
     public void AddPlayer(object sender, EventArgs args)
     {
-        Debug.Log("UI Add player");
-        SpawnNewPlayerEventArgs spawnNewPlayerEventArgs = args as SpawnNewPlayerEventArgs;
-        if (spawnNewPlayerEventArgs == null)
+        Player player = ConvertEventArgsToPLayer(args);
+        if (player == null)
             return;
-        Player player = spawnNewPlayerEventArgs.player;
         Slider slider = Instantiate(CanvasScaler.Instantiate(HPSliderPrefab)) as Slider;
         slider.GetComponent<RectTransform>().SetParent(canvas.transform);
         //Vector3 sliderPosition = Camera.main.WorldToScreenPoint(player.gameObject.transform.position);
@@ -58,11 +63,10 @@ public class UIManager : MonoBehaviour
     }
     public void PlayerKilled(object sender, EventArgs args)
     {
-        SpawnNewPlayerEventArgs spawnNewPlayerEventArgs = args as SpawnNewPlayerEventArgs;
-        if (spawnNewPlayerEventArgs == null)
+        Player player = ConvertEventArgsToPLayer(args);
+        if (player == null)
             return;
-        Player player = spawnNewPlayerEventArgs.player;
-       // Debug.Log("Killed player" + player.GetHashCode());
+        // Debug.Log("Killed player" + player.GetHashCode());
         Slider killedPlayerSlider = null;
         foreach (Slider slider in playerSliders.Keys)
         {
@@ -76,11 +80,27 @@ public class UIManager : MonoBehaviour
     }
     public void GameIsFinished(object sender, EventArgs args)
     {
-        SpawnNewPlayerEventArgs spawnNewPlayerEventArgs = args as SpawnNewPlayerEventArgs;
-        if (spawnNewPlayerEventArgs == null)
+        Player player = ConvertEventArgsToPLayer(args);
+        if (player == null)
             return;
-        Player player = spawnNewPlayerEventArgs.player;
         FinalPopup.SetActive(true);
         winnerNameLable.text = "Winner: " + player.gameObject.name;
+        winnerCollectedCoinsLabel.text = "He collected " + player.CoinsCollected + " coins";
+    }
+    public void CoinIsCollected(object sender, EventArgs args)
+    {
+        Player player = ConvertEventArgsToPLayer(args);
+        if (player == null)
+            return;
+        collectedCoinsCountText.text = player.CoinsCollected.ToString();
+        coinSlider.value = player.CoinsCollected % 10;
+    }
+    private Player ConvertEventArgsToPLayer(EventArgs args)
+    {
+        SpawnNewPlayerEventArgs spawnNewPlayerEventArgs = args as SpawnNewPlayerEventArgs;
+        if (spawnNewPlayerEventArgs == null)
+            return null;
+        Player player = spawnNewPlayerEventArgs.player;
+        return player;
     }
 }
