@@ -24,15 +24,13 @@ public class SpawnPlayer : MonoBehaviourPunCallbacks
         photonView = GetComponent<PhotonView>();
         players = new List<Player>();
         Debug.Log(photonView.Owner.NickName+" : SpawnPlayer script started");
-        Debug.Log(players.Count + " : Players count");
         SpawnNewPlayer();
+        Debug.Log(players.Count + " : Players count");
     }
 
     // Update is called once per frame
     void Update()
     {
-        FindAndAddExistingPlayers();
-        return;
         List<Player> playersToRemove = new List<Player>();
         foreach(Player player in players)
             if (!player.Alive)
@@ -66,46 +64,47 @@ public class SpawnPlayer : MonoBehaviourPunCallbacks
         players.Add(playerScript);
         photonView.Owner.NickName = "Player" + players.Count;
         Debug.Log("Instantiate you in client" + photonView.Owner.NickName);
-        //OnSpawnNewPlayerEvent(playerScript);
-        foreach(Player p in players)
-        {
-            if(p!= playerScript)
-            {
-                p.gameObject.GetComponent<PhotonView>().RPC("RPCSpawnNewPlayer", RpcTarget.Others, player);
-            }
-                
-        }
+        Debug.Log("Send RPC");
+        OnSpawnNewPlayerEvent(playerScript);
+        photonView.RPC("FindNewPlayer", RpcTarget.All, null);
+        
+        
     }
-    private void FindAndAddExistingPlayers()
+    [PunRPC]
+    public void FindNewPlayer()
     {
-        GameObject[] existingPlayeres= GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(existingPlayeres.Length + " players are found");
-        foreach(GameObject p in existingPlayeres)
+        Debug.Log("Receive RPC to add new plyere");
+        GameObject[] existingPlayeres = GameObject.FindGameObjectsWithTag("Player");
+       foreach (GameObject p in existingPlayeres)
         {
             Player pS = p.GetComponent<Player>();
-            if(!players.Contains(pS))
+            if (!players.Contains(pS))
+            {
                 players.Add(pS);
+                OnSpawnNewPlayerEvent(pS);
+            }
         }
+        Debug.Log("Now i have"+players.Count);
+        photonView.RPC("FindNewPlayersOrExisting", RpcTarget.All, null);
+    }
+    [PunRPC]
+    public void FindNewPlayersOrExisting()
+    {
+        GameObject[] existingPlayeres = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log("Receive RPC"+ existingPlayeres.Length);
+        foreach (GameObject p in existingPlayeres)
+        {
+            Player pS = p.GetComponent<Player>();
+            if (!players.Contains(pS))
+            {
+                players.Add(pS);
+                OnSpawnNewPlayerEvent(pS);
+            }
+        }
+        Debug.Log("Now i have" + players.Count);
     }
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        //foreach(PhotonNetwork.PlayerListOthers)
-        //newPlayer
-        //Player script = newPlayer.Get(newPlayer.NickName).
-        Debug.Log("Another player has joined the room" + newPlayer.NickName);
-        
-        //PhotonView.Find(newPlayer.)
-        //players.Add(player);
-        //player.name = "Player" + players.Count;
-    }
-    [PunRPC]
-    private void RPCSpawnNewPlayer(Player player)
-    {
-        Debug.Log("RPC is called");
-        //Debug.Log("Another player has joined the room" + player.name);
-        //players.Add(player);
-        //player.name = "Player" + players.Count;
-        //OnSpawnNewPlayerEvent(player);
     }
     public event EventHandler SpawnNewPlayerEvent;
     public event EventHandler PlayerKilledEvent;

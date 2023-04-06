@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private PlayerInputActions inputActions;
     private Vector2 targetRotationDirection;
     private Vector2 movmentDir;
+    public float bulletOffcet = 1;
 
     [SerializeField]
     private GameObject bulletPrefab;
@@ -55,8 +56,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (MainManager.GameStatus!=GameStatus.Playing || !photonView.IsMine)
-        if(!photonView.IsMine)
+        //if(!photonView.IsMine)
+        if (MainManager.GameStatus!=GameStatus.Playing || !photonView.IsMine)
             return;
         currentRotation= new Vector3(transform.TransformDirection(Vector3.right).x, transform.TransformDirection(Vector3.right).y, 0);
         currentRotation.Normalize();
@@ -90,22 +91,26 @@ public class Player : MonoBehaviour
     [PunRPC]
     public void Damage(int damage)
     {
-        if (!photonView.IsMine)
+        if (photonView.IsMine)
         {
-            Debug.Log(this.gameObject.name + " took damage");
-            HP -= damage;
-            if (HP < 0)
-                HP = 0;
-            if (HP == 0)
-                Alive = false;
-            Debug.Log(this.gameObject.name + " HP" + HP);
+            Debug.Log("I took damage");
         }
+        else
+            Debug.Log("Another took damage");
+        HP -= damage;
+        if (HP < 0)
+            HP = 0;
+        if (HP == 0)
+            Alive = false;
+        Debug.Log(photonView.Owner.NickName + " HP" + HP);
     }
     public void Shot()
     {
-        //Debug.Log("Shot");
-        GameObject bullet = PhotonNetwork.Instantiate(bulletPrefab.name, this.gameObject.transform.position, this.transform.rotation) as GameObject;
-        bullet.GetComponent<Bullet>().owner = this.gameObject;
+        GameObject bullet = PhotonNetwork.Instantiate(bulletPrefab.name, this.gameObject.transform.position+transform.TransformDirection(bulletOffcet,0,0), this.transform.rotation) as GameObject;
+        Debug.Log("Instantiate player id " + photonView.ViewID);
+        bullet.GetComponent<Bullet>().SetOwnerID(photonView.ViewID);
+        //bullet.GetComponent<Bullet>().photonView.RPC
+        //bullet.GetComponent<Bullet>().owner = this.gameObject;
     }
     public void CoinIsCollected()
     {

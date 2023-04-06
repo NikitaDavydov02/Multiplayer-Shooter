@@ -41,6 +41,14 @@ MonoBehaviour:
   - Fire
   - RespawnSpaceship
   - RPCSpawnNewPlayer
+  - RPCFromAnotherSpawnPlayer
+  - RPCToUpdatePlayers
+  - RPCToAddExistingPlayers
+  - AddNewPlayer
+  - FindNewPlayer
+  - FindNewPlayersOrExisting
+  - SetOwnerID
+  - SetOwnerIDRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

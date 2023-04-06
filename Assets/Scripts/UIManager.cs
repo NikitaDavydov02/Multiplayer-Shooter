@@ -56,8 +56,8 @@ public class UIManager : MonoBehaviour
             return;
 
         //Slider slider = PhotonNetwork.Instantiate(CanvasScaler.Instantiate(HPSliderPrefab),Vector3.zero,Quaternion.identity) as Slider;
-        GameObject sliderObject = PhotonNetwork.Instantiate(HPSliderPrefab.name, Vector3.zero, Quaternion.identity) as GameObject;
-        Slider slider = sliderObject.GetComponent<Slider>();
+        //GameObject sliderObject = CanvasScaler.Instantiate(HPSliderPrefab) as GameObject;
+        Slider slider = CanvasScaler.Instantiate(HPSliderPrefab);
         slider.GetComponent<RectTransform>().SetParent(canvas.transform);
         //Vector3 sliderPosition = Camera.main.WorldToScreenPoint(player.gameObject.transform.position);
         //slider.transform.position = sliderPosition;
@@ -68,6 +68,7 @@ public class UIManager : MonoBehaviour
     }
     public void PlayerKilled(object sender, EventArgs args)
     {
+        Debug.Log("UI player is killed");
         Player player = ConvertEventArgsToPLayer(args);
         if (player == null)
             return;

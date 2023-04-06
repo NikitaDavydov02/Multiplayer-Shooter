@@ -130,6 +130,7 @@ MonoBehaviour:
   maxHP: 100
   velocity: 5
   angularVelocity: 200
+  bulletOffcet: 1
   bulletPrefab: {fileID: 3695893132347802566, guid: 2fc27ffa6f4ca3f49937388dc3aa8fad,
     type: 3}
   rotationJoystickTreshhold: 0.01

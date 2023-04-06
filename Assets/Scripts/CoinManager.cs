@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Photon.Pun;
 public class CoinManager : MonoBehaviour
 {
     [SerializeField]
@@ -17,10 +18,11 @@ public class CoinManager : MonoBehaviour
     private float maxX;
     [SerializeField]
     private float maxY;
+    PhotonView photonView;
     // Start is called before the first frame update
     void Start()
     {
-        
+        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -34,8 +36,9 @@ public class CoinManager : MonoBehaviour
     }
     private void SpawnCoin()
     {
-        GameObject newCoin = Instantiate(coinPrefab) as GameObject;
         Vector3 pos = new Vector3(UnityEngine.Random.RandomRange(minX, maxX), UnityEngine.Random.RandomRange(minY, maxY), 0);
+        GameObject newCoin = PhotonNetwork.Instantiate(coinPrefab.name, pos,Quaternion.identity) as GameObject;
+        
         newCoin.transform.position = pos;
         currentCoinCount++;
         Coin coinScript = newCoin.gameObject.GetComponent<Coin>();

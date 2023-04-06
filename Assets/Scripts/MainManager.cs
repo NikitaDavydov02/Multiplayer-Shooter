@@ -31,8 +31,7 @@ public class MainManager : MonoBehaviourPunCallbacks
     }
     void Start()
     {
-        GameStatus = GameStatus.WaitingForPlayers;
-        //MainManager.SpawnPlayer.SpawnNewPlayerEvent += UIManager.AddPlayer;
+        
     }
 
     // Update is called once per frame

@@ -11,12 +11,12 @@ public class Bullet : MonoBehaviour
     private float velocity;
     // Start is called before the first frame update
     private Rigidbody2D rb;
-    public GameObject owner;
-    //private PhotonView photonView;
+    public PhotonView photonView { get; private set; }
+    public int ownerID = 0;
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
-        //photonView = GetComponent<PhotonView>();
+        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -29,19 +29,37 @@ public class Bullet : MonoBehaviour
         }
         rb.velocity = velocity * transform.right;
     }
+   public void SetOwnerID(int id)
+    {
+        if (photonView == null)
+            photonView = GetComponent<PhotonView>();
+        ownerID = id;
+        photonView.RPC("SetOwnerIDRPC", RpcTarget.Others, id);
+    }
+    [PunRPC]
+    public void SetOwnerIDRPC(int id)
+    {
+        if (photonView == null)
+            photonView = GetComponent<PhotonView>();
+        Debug.Log("Receive bullet RPC" + id);
+        ownerID = id;
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject != owner && other.gameObject.tag!="Coin")
+        if (other.gameObject.tag!="Coin")
         {
-            Debug.Log("Bullet hited");
-            Player player = other.gameObject.GetComponent<Player>();
-            if (player != null)
+            PhotonView pv = other.gameObject.GetComponent<PhotonView>();
+            if(pv!=null && pv.ViewID != ownerID)
             {
-                player.GetComponent<PhotonView>().RPC("Damage", RpcTarget.All, damage);
-                ////player.Damage(damage);
-                
+                Player player = other.gameObject.GetComponent<Player>();
+                if (player != null)
+                {
+                    pv.RPC("Damage", RpcTarget.All, damage);
+
+                }
+                PhotonNetwork.Destroy(this.gameObject);
             }
-            PhotonNetwork.Destroy(this.gameObject);
+            
         }
         
     }
