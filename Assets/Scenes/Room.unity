@@ -1031,7 +1031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50a33eca9e12edd49a54715551fb07b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HPSliderPrefab: {fileID: 5196501974882725311, guid: 969e23ec15cfc8a4fbc3af492ad632ce,
+  HPSliderPrefab: {fileID: 5196501974882725311, guid: e435f83bd00f3a24c813757a7d198dec,
     type: 3}
   canvas: {fileID: 978950040}
   FinalPopup: {fileID: 719684312}
@@ -1078,7 +1078,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bfca915c155b54b9a23b89bc3a9a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerPrefab: {fileID: 322650473843675888, guid: 819d3902dcb0c3a4e81bcb0f8ec1f54d,
+  PlayerPrefab: {fileID: 322650473843675888, guid: 288b9cc689ceeab4db1b2d54dd775f8f,
     type: 3}
   minX: -5
   minY: -4
@@ -1097,7 +1097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCoinCount: 10
-  coinPrefab: {fileID: 6766822388881714583, guid: 00a133251065163439575a3ca2e39107,
+  coinPrefab: {fileID: 6766822388881714583, guid: 28da9473290d22249a75e505f6e23e31,
     type: 3}
   minX: -7
   minY: -4

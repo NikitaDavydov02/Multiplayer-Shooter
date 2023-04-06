@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Photon.Pun;
 
 public class UIManager : MonoBehaviour
 {
@@ -52,7 +53,10 @@ public class UIManager : MonoBehaviour
         Player player = ConvertEventArgsToPLayer(args);
         if (player == null)
             return;
-        Slider slider = Instantiate(CanvasScaler.Instantiate(HPSliderPrefab)) as Slider;
+
+        //Slider slider = PhotonNetwork.Instantiate(CanvasScaler.Instantiate(HPSliderPrefab),Vector3.zero,Quaternion.identity) as Slider;
+        GameObject sliderObject = PhotonNetwork.Instantiate(HPSliderPrefab.name, Vector3.zero, Quaternion.identity) as GameObject;
+        Slider slider = sliderObject.GetComponent<Slider>();
         slider.GetComponent<RectTransform>().SetParent(canvas.transform);
         //Vector3 sliderPosition = Camera.main.WorldToScreenPoint(player.gameObject.transform.position);
         //slider.transform.position = sliderPosition;

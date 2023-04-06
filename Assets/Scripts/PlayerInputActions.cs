@@ -44,6 +44,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""8ef6665e-248a-4ef9-a70a-399ca5072c2a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -68,6 +77,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0d4ea8e6-6223-4b7b-b9be-d58fdae5fde3"",
+                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -78,6 +98,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_MainActionMap = asset.FindActionMap("MainActionMap", throwIfNotFound: true);
         m_MainActionMap_Move = m_MainActionMap.FindAction("Move", throwIfNotFound: true);
         m_MainActionMap_Rotate = m_MainActionMap.FindAction("Rotate", throwIfNotFound: true);
+        m_MainActionMap_Shoot = m_MainActionMap.FindAction("Shoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -139,12 +160,14 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private IMainActionMapActions m_MainActionMapActionsCallbackInterface;
     private readonly InputAction m_MainActionMap_Move;
     private readonly InputAction m_MainActionMap_Rotate;
+    private readonly InputAction m_MainActionMap_Shoot;
     public struct MainActionMapActions
     {
         private @PlayerInputActions m_Wrapper;
         public MainActionMapActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_MainActionMap_Move;
         public InputAction @Rotate => m_Wrapper.m_MainActionMap_Rotate;
+        public InputAction @Shoot => m_Wrapper.m_MainActionMap_Shoot;
         public InputActionMap Get() { return m_Wrapper.m_MainActionMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -160,6 +183,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Rotate.started -= m_Wrapper.m_MainActionMapActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_MainActionMapActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_MainActionMapActionsCallbackInterface.OnRotate;
+                @Shoot.started -= m_Wrapper.m_MainActionMapActionsCallbackInterface.OnShoot;
+                @Shoot.performed -= m_Wrapper.m_MainActionMapActionsCallbackInterface.OnShoot;
+                @Shoot.canceled -= m_Wrapper.m_MainActionMapActionsCallbackInterface.OnShoot;
             }
             m_Wrapper.m_MainActionMapActionsCallbackInterface = instance;
             if (instance != null)
@@ -170,6 +196,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
             }
         }
     }
@@ -178,5 +207,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
     }
 }

@@ -22,12 +22,13 @@ public class MainManager : MonoBehaviour
         MainManager.SpawnPlayer.PlayerKilledEvent += UIManager.PlayerKilled;
         MainManager.SpawnPlayer.GameIsFinishedEvent += UIManager.GameIsFinished;
         MainManager.SpawnPlayer.GameIsFinishedEvent += GameIsFinished;
+        MainManager.SpawnPlayer.GameIsStartedEvent += GameIsStarted;
         MainManager.CoinManager.CoinIsCollectedEvent += UIManager.CoinIsCollected;
         GameStatus = GameStatus.WaitingForPlayers;
     }
     void Start()
     {
-        GameStatus = GameStatus.Playing;
+        GameStatus = GameStatus.WaitingForPlayers;
         //MainManager.SpawnPlayer.SpawnNewPlayerEvent += UIManager.AddPlayer;
     }
 
@@ -39,6 +40,12 @@ public class MainManager : MonoBehaviour
     private void GameIsFinished(object sender, EventArgs args)
     {
         GameStatus = GameStatus.Finished;
+        Debug.Log("GameStatus.Finished;");
+    }
+    private void GameIsStarted(object sender, EventArgs args)
+    {
+        GameStatus = GameStatus.Playing;
+        Debug.Log("GameStatus.Playing;");
     }
 }
 public enum GameStatus { 

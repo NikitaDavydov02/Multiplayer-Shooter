@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Photon.Pun;
 
 public class SpawnPlayer : MonoBehaviour
 {
@@ -21,7 +22,6 @@ public class SpawnPlayer : MonoBehaviour
     {
         players = new List<Player>();
         SpawnNewPlayer();
-        SpawnNewPlayer();
     }
 
     // Update is called once per frame
@@ -38,9 +38,13 @@ public class SpawnPlayer : MonoBehaviour
         foreach(Player player in playersToRemove)
         {
             players.Remove(player);
-            Destroy(player.gameObject);
+            PhotonNetwork.Destroy(player.gameObject);
         }
-        if (players.Count == 1)
+        if (players.Count > 1 && MainManager.GameStatus!=GameStatus.Playing)
+        {
+            OnGameIsStartedEvent();
+        }
+        if (players.Count == 1 && MainManager.GameStatus==GameStatus.Playing)
         {
             //GameIsFinished;
             OnGameIsFinishedEvent(players[0]);
@@ -48,9 +52,12 @@ public class SpawnPlayer : MonoBehaviour
     }
     private void SpawnNewPlayer()
     {
-        GameObject player = Instantiate(PlayerPrefab) as GameObject;
-        player.transform.position = new Vector3(UnityEngine.Random.RandomRange(minX, maxX), UnityEngine.Random.RandomRange(minY, maxY), 0);
-        
+        //GameObject player = Instantiate(PlayerPrefab) as GameObject;
+        Vector3 randomPosition = new Vector3(UnityEngine.Random.RandomRange(minX, maxX), UnityEngine.Random.RandomRange(minY, maxY), 0);
+
+        GameObject player = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity,0,null);
+        player.GetComponent<SpriteRenderer>().color = Color.green;
+        Debug.Log("Instantiate player" + player);
         Player playerScript = player.GetComponent<Player>();
         players.Add(playerScript);
         player.name = "Player" + players.Count;
@@ -59,6 +66,7 @@ public class SpawnPlayer : MonoBehaviour
     public event EventHandler SpawnNewPlayerEvent;
     public event EventHandler PlayerKilledEvent;
     public event EventHandler GameIsFinishedEvent;
+    public event EventHandler GameIsStartedEvent;
 
     public void OnSpawnNewPlayerEvent(Player player)
     {
@@ -77,6 +85,12 @@ public class SpawnPlayer : MonoBehaviour
         EventHandler handler = GameIsFinishedEvent;
         if (handler != null)
             handler(this, new SpawnNewPlayerEventArgs(player));
+    }
+    public void OnGameIsStartedEvent()
+    {
+        EventHandler handler = GameIsStartedEvent;
+        if (handler != null)
+            handler(this, new EventArgs());
     }
 }
 public class SpawnNewPlayerEventArgs : EventArgs
