@@ -17,9 +17,11 @@ public class SpawnPlayer : MonoBehaviour
     private float maxX;
     [SerializeField]
     private float maxY;
+    PhotonView photonView;
     // Start is called before the first frame update
     void Start()
     {
+        photonView = GetComponent<PhotonView>();
         players = new List<Player>();
         SpawnNewPlayer();
     }
@@ -62,6 +64,14 @@ public class SpawnPlayer : MonoBehaviour
         players.Add(playerScript);
         player.name = "Player" + players.Count;
         OnSpawnNewPlayerEvent(playerScript);
+        photonView.RPC("RPCSpawnNewPlayer", RpcTarget.Others, player);
+    }
+    [PunRPC]
+    private void RPCSpawnNewPlayer(Player player)
+    {
+        players.Add(player);
+        player.name = "Player" + players.Count;
+        OnSpawnNewPlayerEvent(player);
     }
     public event EventHandler SpawnNewPlayerEvent;
     public event EventHandler PlayerKilledEvent;

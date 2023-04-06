@@ -50,6 +50,7 @@ public class UIManager : MonoBehaviour
     }
     public void AddPlayer(object sender, EventArgs args)
     {
+        Debug.Log("UI add player");
         Player player = ConvertEventArgsToPLayer(args);
         if (player == null)
             return;

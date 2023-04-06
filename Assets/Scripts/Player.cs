@@ -87,22 +87,24 @@ public class Player : MonoBehaviour
             rb.angularVelocity = 0;
         rb.velocity = movmentDir* velocity;
     }
-    //[PunRPC]
+    [PunRPC]
     public void Damage(int damage)
     {
-        Debug.Log("Damage");
-        HP -= damage;
-        if (HP < 0)
-            HP = 0;
-        if (HP == 0)
-            Alive = false;
+        if (!photonView.IsMine)
+        {
+            Debug.Log(this.gameObject.name + " took damage");
+            HP -= damage;
+            if (HP < 0)
+                HP = 0;
+            if (HP == 0)
+                Alive = false;
+            Debug.Log(this.gameObject.name + " HP" + HP);
+        }
     }
     public void Shot()
     {
         //Debug.Log("Shot");
         GameObject bullet = PhotonNetwork.Instantiate(bulletPrefab.name, this.gameObject.transform.position, this.transform.rotation) as GameObject;
-        //bullet.transform.position = this.gameObject.transform.position;
-        //bullet.transform.rotation = this.transform.rotation;
         bullet.GetComponent<Bullet>().owner = this.gameObject;
     }
     public void CoinIsCollected()

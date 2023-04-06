@@ -127,9 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b0b061bf7c8b544e985e542e4321cc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHP: 100
   velocity: 5
   angularVelocity: 200
-  maxHP: 100
   bulletPrefab: {fileID: 3695893132347802566, guid: 2fc27ffa6f4ca3f49937388dc3aa8fad,
     type: 3}
   rotationJoystickTreshhold: 0.01

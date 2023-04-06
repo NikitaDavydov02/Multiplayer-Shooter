@@ -12,11 +12,11 @@ public class Bullet : MonoBehaviour
     // Start is called before the first frame update
     private Rigidbody2D rb;
     public GameObject owner;
-    private PhotonView photonView;
+    //private PhotonView photonView;
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();
-        photonView = GetComponent<PhotonView>();
+        //photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -33,13 +33,15 @@ public class Bullet : MonoBehaviour
     {
         if (other.gameObject != owner && other.gameObject.tag!="Coin")
         {
+            Debug.Log("Bullet hited");
             Player player = other.gameObject.GetComponent<Player>();
             if (player != null)
             {
-                //player.gameObject.GetComponent<PhotonView>().RPC("Damage", RpcTarget., damage);
-                player.Damage(damage);
-                PhotonNetwork.Destroy(this.gameObject);
+                player.GetComponent<PhotonView>().RPC("Damage", RpcTarget.All, damage);
+                ////player.Damage(damage);
+                
             }
+            PhotonNetwork.Destroy(this.gameObject);
         }
         
     }
