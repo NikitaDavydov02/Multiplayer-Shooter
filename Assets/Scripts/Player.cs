@@ -115,5 +115,11 @@ public class Player : MonoBehaviour
     public void CoinIsCollected()
     {
         CoinsCollected++;
+        photonView.RPC("CoinIsCollectedRPC", RpcTarget.All, CoinsCollected); 
+    }
+    [PunRPC]
+    public void CoinIsCollectedRPC(int coinsCollected)
+    {
+        CoinsCollected = coinsCollected;
     }
 }

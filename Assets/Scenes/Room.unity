@@ -1081,6 +1081,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 322650473843675888, guid: 288b9cc689ceeab4db1b2d54dd775f8f,
     type: 3}
+  players: []
   minX: -5
   minY: -4
   maxX: 5
@@ -1100,6 +1101,7 @@ MonoBehaviour:
   maxCoinCount: 10
   coinPrefab: {fileID: 6766822388881714583, guid: 28da9473290d22249a75e505f6e23e31,
     type: 3}
+  currentCoinCount: 0
   minX: -7
   minY: -4
   maxX: 7
@@ -1772,7 +1774,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 0
 --- !u!222 &1770290827
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -49,6 +49,10 @@ MonoBehaviour:
   - FindNewPlayersOrExisting
   - SetOwnerID
   - SetOwnerIDRPC
+  - FindNewCoin
+  - AddNewCoin
+  - UpdateCoinsCount
+  - CoinIsCollectedRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

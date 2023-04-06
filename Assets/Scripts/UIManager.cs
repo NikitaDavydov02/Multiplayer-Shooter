@@ -96,6 +96,9 @@ public class UIManager : MonoBehaviour
     public void CoinIsCollected(object sender, EventArgs args)
     {
         Player player = ConvertEventArgsToPLayer(args);
+        Debug.Log("Coin is collected by my player" + player.GetComponent<PhotonView>().IsMine);
+        if (!player.GetComponent<PhotonView>().IsMine)
+            return;
         if (player == null)
             return;
         collectedCoinsCountText.text = player.CoinsCollected.ToString();

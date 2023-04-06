@@ -23,7 +23,6 @@ public class Coin : MonoBehaviour
         {
             player.CoinIsCollected();
             OnCoinIsCollected(player);
-            Destroy(this.gameObject);
         }
     }
     public event EventHandler CoinIsCollected;
@@ -31,6 +30,16 @@ public class Coin : MonoBehaviour
     {
         EventHandler handler = CoinIsCollected;
         if (handler != null)
-            handler(this, new SpawnNewPlayerEventArgs(player));
+            handler(this, new CoinIsCollectedEventArgs(this, player));
+    }
+}
+public class CoinIsCollectedEventArgs : EventArgs
+{
+    public Coin Coin { get; private set; }
+    public Player Player{ get; private set; }
+    public CoinIsCollectedEventArgs(Coin coin, Player player)
+    {
+        Coin = coin;
+        Player = player;
     }
 }
