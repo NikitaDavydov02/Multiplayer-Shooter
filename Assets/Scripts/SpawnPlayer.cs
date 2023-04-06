@@ -8,7 +8,7 @@ public class SpawnPlayer : MonoBehaviour
 {
     [SerializeField]
     GameObject PlayerPrefab;
-    private List<Player> players;
+    public List<Player> players;
     [SerializeField]
     private float minX;
     [SerializeField]
@@ -54,24 +54,31 @@ public class SpawnPlayer : MonoBehaviour
     }
     private void SpawnNewPlayer()
     {
-        //GameObject player = Instantiate(PlayerPrefab) as GameObject;
         Vector3 randomPosition = new Vector3(UnityEngine.Random.RandomRange(minX, maxX), UnityEngine.Random.RandomRange(minY, maxY), 0);
 
         GameObject player = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity,0,null);
         player.GetComponent<SpriteRenderer>().color = Color.green;
-        Debug.Log("Instantiate player" + player);
+        Debug.Log("Instantiate you in client" + player.name);
         Player playerScript = player.GetComponent<Player>();
         players.Add(playerScript);
         player.name = "Player" + players.Count;
         OnSpawnNewPlayerEvent(playerScript);
-        photonView.RPC("RPCSpawnNewPlayer", RpcTarget.Others, player);
+        foreach(Player p in players)
+        {
+            if(p!= playerScript)
+            {
+                p.gameObject.GetComponent<PhotonView>().RPC("RPCSpawnNewPlayer", RpcTarget.Others, player);
+            }
+                
+        }
     }
     [PunRPC]
     private void RPCSpawnNewPlayer(Player player)
     {
+        Debug.Log("Another player has joined the room" + player.name);
         players.Add(player);
         player.name = "Player" + players.Count;
-        OnSpawnNewPlayerEvent(player);
+        //OnSpawnNewPlayerEvent(player);
     }
     public event EventHandler SpawnNewPlayerEvent;
     public event EventHandler PlayerKilledEvent;

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Photon.Pun;
 
 public class MainManager : MonoBehaviour
 {
@@ -9,11 +10,13 @@ public class MainManager : MonoBehaviour
     private static UIManager UIManager;
     private static SpawnPlayer SpawnPlayer;
     private static CoinManager CoinManager;
+    private static PhotonView photonView;
     //public static CoinManager CoinManager;
 
     // Start is called before the first frame update
     private void Awake()
     {
+        photonView = GetComponent<PhotonView>();
         UIManager = GetComponent<UIManager>();
         SpawnPlayer = GetComponent<SpawnPlayer>();
         CoinManager = GetComponent<CoinManager>();
@@ -47,6 +50,7 @@ public class MainManager : MonoBehaviour
         GameStatus = GameStatus.Playing;
         Debug.Log("GameStatus.Playing;");
     }
+    OnJoine
 }
 public enum GameStatus { 
     WaitingForPlayers,
