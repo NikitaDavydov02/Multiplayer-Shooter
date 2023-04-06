@@ -63,7 +63,7 @@ public class SpawnPlayer : MonoBehaviourPunCallbacks
         Player playerScript = player.GetComponent<Player>();
         playerScript.CoinIsCollcted += OnCoinIsCollected;
         players.Add(playerScript);
-        photonView.Owner.NickName = "Player" + players.Count;
+        player.name = "Player" + players.Count;
         Debug.Log("Instantiate you in client" + photonView.Owner.NickName);
         Debug.Log("Send RPC");
         OnSpawnNewPlayerEvent(playerScript);

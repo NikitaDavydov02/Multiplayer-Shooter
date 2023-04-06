@@ -102,7 +102,7 @@ public class UIManager : MonoBehaviour
         if (player == null)
             return;
         collectedCoinsCountText.text = player.CoinsCollected.ToString();
-        coinSlider.value = player.CoinsCollected % 10;
+        coinSlider.value = player.CoinsCollected;
     }
     private Player ConvertEventArgsToPLayer(EventArgs args)
     {
