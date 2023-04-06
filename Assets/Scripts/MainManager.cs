@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 
-public class MainManager : MonoBehaviour
+public class MainManager : MonoBehaviourPunCallbacks
 {
     public static GameStatus GameStatus { get; private set; }
     private static UIManager UIManager;
@@ -50,7 +50,7 @@ public class MainManager : MonoBehaviour
         GameStatus = GameStatus.Playing;
         Debug.Log("GameStatus.Playing;");
     }
-    OnJoine
+    
 }
 public enum GameStatus { 
     WaitingForPlayers,

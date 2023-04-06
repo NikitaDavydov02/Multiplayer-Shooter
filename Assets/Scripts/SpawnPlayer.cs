@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using Photon.Pun;
 
-public class SpawnPlayer : MonoBehaviour
+public class SpawnPlayer : MonoBehaviourPunCallbacks
 {
     [SerializeField]
     GameObject PlayerPrefab;
@@ -23,17 +23,21 @@ public class SpawnPlayer : MonoBehaviour
     {
         photonView = GetComponent<PhotonView>();
         players = new List<Player>();
+        Debug.Log(photonView.Owner.NickName+" : SpawnPlayer script started");
+        Debug.Log(players.Count + " : Players count");
         SpawnNewPlayer();
     }
 
     // Update is called once per frame
     void Update()
     {
+        FindAndAddExistingPlayers();
+        return;
         List<Player> playersToRemove = new List<Player>();
         foreach(Player player in players)
             if (!player.Alive)
             {
-                Debug.Log("Player is killed" + player);
+                Debug.Log("Player is killed" + photonView.Owner.NickName);
                 OnPlayerKilledEvent(player);
                 playersToRemove.Add(player);
             }
@@ -58,11 +62,11 @@ public class SpawnPlayer : MonoBehaviour
 
         GameObject player = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity,0,null);
         player.GetComponent<SpriteRenderer>().color = Color.green;
-        Debug.Log("Instantiate you in client" + player.name);
         Player playerScript = player.GetComponent<Player>();
         players.Add(playerScript);
-        player.name = "Player" + players.Count;
-        OnSpawnNewPlayerEvent(playerScript);
+        photonView.Owner.NickName = "Player" + players.Count;
+        Debug.Log("Instantiate you in client" + photonView.Owner.NickName);
+        //OnSpawnNewPlayerEvent(playerScript);
         foreach(Player p in players)
         {
             if(p!= playerScript)
@@ -72,12 +76,35 @@ public class SpawnPlayer : MonoBehaviour
                 
         }
     }
+    private void FindAndAddExistingPlayers()
+    {
+        GameObject[] existingPlayeres= GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log(existingPlayeres.Length + " players are found");
+        foreach(GameObject p in existingPlayeres)
+        {
+            Player pS = p.GetComponent<Player>();
+            if(!players.Contains(pS))
+                players.Add(pS);
+        }
+    }
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        //foreach(PhotonNetwork.PlayerListOthers)
+        //newPlayer
+        //Player script = newPlayer.Get(newPlayer.NickName).
+        Debug.Log("Another player has joined the room" + newPlayer.NickName);
+        
+        //PhotonView.Find(newPlayer.)
+        //players.Add(player);
+        //player.name = "Player" + players.Count;
+    }
     [PunRPC]
     private void RPCSpawnNewPlayer(Player player)
     {
-        Debug.Log("Another player has joined the room" + player.name);
-        players.Add(player);
-        player.name = "Player" + players.Count;
+        Debug.Log("RPC is called");
+        //Debug.Log("Another player has joined the room" + player.name);
+        //players.Add(player);
+        //player.name = "Player" + players.Count;
         //OnSpawnNewPlayerEvent(player);
     }
     public event EventHandler SpawnNewPlayerEvent;
