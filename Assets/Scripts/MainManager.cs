@@ -26,7 +26,7 @@ public class MainManager : MonoBehaviourPunCallbacks
         MainManager.SpawnPlayer.GameIsFinishedEvent += UIManager.GameIsFinished;
         MainManager.SpawnPlayer.GameIsFinishedEvent += GameIsFinished;
         MainManager.SpawnPlayer.GameIsStartedEvent += GameIsStarted;
-        MainManager.CoinManager.CoinIsCollectedEvent += UIManager.CoinIsCollected;
+        MainManager.SpawnPlayer.CoinIsCollectedEvent += UIManager.CoinIsCollected;
         GameStatus = GameStatus.WaitingForPlayers;
     }
     void Start()

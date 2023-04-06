@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class Player : MonoBehaviour
 {
@@ -115,11 +116,19 @@ public class Player : MonoBehaviour
     public void CoinIsCollected()
     {
         CoinsCollected++;
-        photonView.RPC("CoinIsCollectedRPC", RpcTarget.All, CoinsCollected); 
+        photonView.RPC("CoinIsCollectedRPC", RpcTarget.All, CoinsCollected);
+        OnCoinIsCollcted();
     }
     [PunRPC]
     public void CoinIsCollectedRPC(int coinsCollected)
     {
         CoinsCollected = coinsCollected;
+    }
+    public event EventHandler CoinIsCollcted;
+    public void OnCoinIsCollcted()
+    {
+        EventHandler handler = CoinIsCollcted;
+        if (handler != null)
+            handler(this, new SpawnNewPlayerEventArgs(this));
     }
 }

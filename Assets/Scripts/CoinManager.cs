@@ -57,9 +57,9 @@ public class CoinManager : MonoBehaviour
     //    Debug.Log("Coins count RPC update received" + coinsCount);
     //    currentCoinCount = coinsCount;
     //}
-    //[PunRPC]
-    //public void AddNewCoin()
-    //{
+    [PunRPC]
+    public void AddNewCoin()
+    {
     //    Debug.Log("Receive RPC to add coin");
     //    GameObject[] existingCoins = GameObject.FindGameObjectsWithTag("Coin");
     //    foreach (GameObject c in existingCoins)
@@ -72,7 +72,7 @@ public class CoinManager : MonoBehaviour
     //        }
     //    }
     //    Debug.Log("Now i have coins" + coins.Count);
-    //}
+    }
     public void CoinIsCollected(object sender, EventArgs args)
     {
         CoinIsCollectedEventArgs coinIsCollectedEventArgs = args as CoinIsCollectedEventArgs;
@@ -84,13 +84,7 @@ public class CoinManager : MonoBehaviour
         currentCoinCount--;
         //photonView.RPC("UpdateCoinsCount", RpcTarget.All, currentCoinCount);
         SpawnNewPlayerEventArgs arg = new SpawnNewPlayerEventArgs(playerCllected);
-        OnCoinIsCollected(arg);
+        //OnCoinIsCollected(arg);
     }
-    public event EventHandler CoinIsCollectedEvent;
-    private void OnCoinIsCollected(EventArgs args)
-    {
-        EventHandler handler = CoinIsCollectedEvent;
-        if (handler != null)
-            handler(this, args);
-    }
+    
 }

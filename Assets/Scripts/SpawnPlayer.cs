@@ -61,6 +61,7 @@ public class SpawnPlayer : MonoBehaviourPunCallbacks
         GameObject player = PhotonNetwork.Instantiate(PlayerPrefab.name, randomPosition, Quaternion.identity,0,null);
         player.GetComponent<SpriteRenderer>().color = Color.green;
         Player playerScript = player.GetComponent<Player>();
+        playerScript.CoinIsCollcted += OnCoinIsCollected;
         players.Add(playerScript);
         photonView.Owner.NickName = "Player" + players.Count;
         Debug.Log("Instantiate you in client" + photonView.Owner.NickName);
@@ -110,6 +111,7 @@ public class SpawnPlayer : MonoBehaviourPunCallbacks
     public event EventHandler PlayerKilledEvent;
     public event EventHandler GameIsFinishedEvent;
     public event EventHandler GameIsStartedEvent;
+    public event EventHandler CoinIsCollectedEvent;
 
     public void OnSpawnNewPlayerEvent(Player player)
     {
@@ -134,6 +136,12 @@ public class SpawnPlayer : MonoBehaviourPunCallbacks
         EventHandler handler = GameIsStartedEvent;
         if (handler != null)
             handler(this, new EventArgs());
+    }
+    private void OnCoinIsCollected(object sender, EventArgs args)
+    {
+        EventHandler handler = CoinIsCollectedEvent;
+        if (handler != null)
+            handler(this, args);
     }
 }
 public class SpawnNewPlayerEventArgs : EventArgs
